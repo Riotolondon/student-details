@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Filter Controls -->
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-secondary" onclick="filterStudents('all')">All</button>
+                <button type="button" class="btn btn-success" onclick="filterStudents('successful')">Successful</button>
+                <button type="button" class="btn btn-danger" onclick="filterStudents('rejected')">Rejected</button>
+                <button type="button" class="btn btn-warning" onclick="filterStudents('pending')">Pending</button>
+            </div>
+        </div>
+    </div>
+    <!-- Student Cards -->
+    <div class="row" id="studentCards">
+        {% for student in students %}
+        <div class="col-md-4" id="student-{{ student.id }}" data-status="{{ 'successful' if student.status == ApplicationStatus.SUCCESSFUL else 'rejected' if student.status == ApplicationStatus.REJECT else 'pending' }}">
+            <!-- Card with hover effect -->
+            <div class="card mb-3 {{ 'card-successful' if student.status == ApplicationStatus.SUCCESSFUL else 'card-rejected' if student.status == ApplicationStatus.REJECT else 'card-pending' }}" style="transition: transform .2s; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1.0)'">
+                <div class="card-body">
+                    <h5 class="card-title">#{{ student.id }} {{ student.name }} {{ student.surname }}</h5>
+                    <p class="card-text">applied: {{ student.created_at }}</p>
+                    <!-- Display application status -->
+                    <p class="card-text">Status: {{ 'Successful' if student.status == ApplicationStatus.SUCCESSFUL else 'Rejected' if student.status == ApplicationStatus.REJECT else 'Pending' }}</p>
+
+                    <!-- Student Details/Edit Button -->
+                    <button class="btn btn-info btn-sm" type="button" id="detailsButton-{{ student.id }}" data-student-url="{{ url_for('student', student_id=student.id) }}" onclick="redirectToStudentPage({{ student.id }})">
+                        Student Details
+                    </button>
+                    <!-- Delete Student Button -->
+                    <button class="btn btn-danger btn-sm" onclick="deleteStudent({{ student.id }})">Delete Student</button>
+                    <!-- Edit Student Button -->
+                    <a href="{{ url_for('edit', student_id=student.id) }}" class="btn btn-primary btn-sm">Edit</a>
+                </div>
+            </div>
+            <!-- Student Details Section -->
+            <div class="collapse" id="details-{{ student.id }}">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Academic Background: {{ student.academic_background }}</p>
+                        <p>Experience: {{ student.experience }}</p>
+                        <p>Skills: {{ student.skills }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function redirectToStudentPage(studentId) {
+    var detailsButton = document.getElementById('detailsButton-' + studentId);
+    window.location.href = detailsButton.getAttribute('data-student-url');
+}
+
+function deleteStudent(studentId) {
+    // Confirm deletion
+    if (confirm('Are you sure you want to delete this student?')) {
+        // Remove the student's card from view
+        document.getElementById('student-' + studentId).style.display = 'none';
+    }
+}
+
+function filterStudents(status) {
+    var studentCards = document.getElementById('studentCards').children;
+
+    for (var i = 0; i < studentCards.length; i++) {
+        var card = studentCards[i];
+        if (status === 'all' || card.getAttribute('data-status') === status) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    }
+}
+</script>
+{% endblock %}
