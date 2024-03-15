@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h1 class="card-title">{{ student.name }} {{ student.surname }}</h1>
+                    <p class="card-text"><b>#{{ student.id }}</b></p>
+                    <p class="card-text">
+                        <a href="{{ url_for('index', student_id=student.id) }}" class="text-primary">
+                            {{ student.name }} {{ student.surname }}
+                        </a>
+                    </p>
+                    <p class="card-text">ID Number: {{ student.id_number }}</p>
+                    <p class="card-text">Email: {{ student.email }}</p>
+                    <p class="card-text">Course: {{ student.course }}</p>
+                    <p class="card-text">Academic Background: {{ student.academic_background }}</p>
+                    <p class="card-text">Experience: {{ student.experience }}</p>
+                    <p class="card-text">Skills: {{ student.skills }}</p>
+                    <p class="card-text">Joined: {{ student.created_at }}</p>
+                    <!-- Display the uploaded document -->
+                    {% if student.document_path %}
+                    <div class="document">
+                        <h4>Uploaded Document</h4>
+                        <img src="{{ student.document_path }}" alt="Uploaded Document" class="img-fluid">
+                    </div>
+                    {% else %}
+                    <p class="card-text">No document uploaded.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

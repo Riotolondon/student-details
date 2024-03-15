@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="text-center mb-4">
+        {% block title %} Edit {{ student.name }}
+                               {{ student.surname }}'s Details
+        {% endblock %}
+    </h1>
+    <form method="post" class="container">
+        <div class="form-group">
+            <label for="id">Student Number</label>
+            <input type="text" name="Id"
+                   value="{{ student.id }}"
+                   placeholder="Student Number"
+                   class="form-control">
+
+
+
+
+      <div class="form-group">
+
+<select class="form-select" name="status">
+    <option value="">Select status</option>
+    <option value="successful">Successful</option>
+    <option value="reject">Reject</option>
+</select>
+
+</div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+{% endblock %}
